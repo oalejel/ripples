@@ -1,3 +1,11 @@
+"""
+Omar Al-Ejel
+
+Click to summon a new ripple or use arrow keys
+
+"""
+
+
 
 # contains tuples ((x,y), radius, (topleft, topright, bottomleft, bottomright))
 # the tuple at the end is used to check if circle still in box
