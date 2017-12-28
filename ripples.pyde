@@ -18,6 +18,7 @@ def setup():
     pixelDensity(2)
     background(0)
     size(500, 500)
+    fill(0)
     # fullScreen()
     global playerX, playerY
     playerX = width / 2
@@ -30,10 +31,10 @@ def draw():
     # print(lastMillis)
     if lastMillis != m:
         lastMillis = m
-        newRipple()
+        newRipple(playerX, playerY)
+        # print(len(circles))
     
     # println("here1")
-    fill(0)
     # must use a static definition of length since size can change in draw
     # function
     startLen = len(circles)
@@ -44,11 +45,12 @@ def draw():
         x = c[0][0]
         y = c[0][1]
         r = c[1]
-        distanceCheck = c[2]
-
-        if distanceCheck[0] < r and distanceCheck[1] < r and distanceCheck[2] < r and distanceCheck[3] < r:
+        lessThanR = c[2]
+        # print("lesss than R: {0}, r: {1}".format(lessThanR, r))
+        if lessThanR < r:
             # print("time to remove")
             indicesToRemove.append(i)
+            
             continue
         ellipse(x, y, 2 * r, 2 * r)
         circles[i][1] = r + 1
@@ -61,24 +63,22 @@ def draw():
             # print(circles)
 
 
-def newRipple():
-    x = playerX
-    y = playerY
-
+def newRipple(x, y):
     topLeft = sqrt(pow(x, 2) + pow(y, 2))
     topRight = sqrt(pow(x - width, 2) + pow(y, 2))
     bottomLeft = sqrt(pow(x, 2) + pow(y - height, 2))
     bottomRight = sqrt(pow(x - width, 2) + pow(y - height, 2))
 
-    distanceChecklist = (topLeft, topRight, bottomLeft, bottomRight)
+    corners = [topLeft, topRight, bottomLeft, bottomRight]
+    lessThanR = sort(corners)[3]
 
-    newCircle = [(x, y), 0, distanceChecklist]
+    newCircle = [(x, y), 0, lessThanR]
     circles.append(newCircle)
     # print(circles)
 
 def keyPressed():
     global playerY, playerX
-    print(keyCode)
+    # print(keyCode)
     if keyCode == 38:
         playerY -= 3
     elif keyCode == 40:
@@ -88,17 +88,9 @@ def keyPressed():
     elif keyCode == 39:
         playerX += 3
 
+
 def mousePressed():
     x = mouseX
     y = mouseY
-
-    topLeft = sqrt(pow(x, 2) + pow(y, 2))
-    topRight = sqrt(pow(x - width, 2) + pow(y, 2))
-    bottomLeft = sqrt(pow(x, 2) + pow(y - height, 2))
-    bottomRight = sqrt(pow(x - width, 2) + pow(y - height, 2))
-
-    distanceChecklist = (topLeft, topRight, bottomLeft, bottomRight)
-
-    newCircle = [(x, y), 0, distanceChecklist]
-    circles.append(newCircle)
-    print(circles)
+    
+    newRipple(x, y)
